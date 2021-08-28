@@ -1,2 +1,3 @@
 # upbit-tradingbot
-upbit trading program
+
+upbit trading program!

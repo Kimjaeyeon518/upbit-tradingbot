@@ -1,15 +1,5 @@
 [
   {
-    "market": "KRW-BTC",
-    "korean_name": "비트코인",
-    "english_name": "Bitcoin"
-  },
-  {
-    "market": "KRW-ETH",
-    "korean_name": "이더리움",
-    "english_name": "Ethereum"
-  },
-  {
     "market": "KRW-NEO",
     "korean_name": "네오",
     "english_name": "NEO"
@@ -98,11 +88,6 @@
     "market": "KRW-REP",
     "korean_name": "어거",
     "english_name": "Augur"
-  },
-  {
-    "market": "KRW-ADA",
-    "korean_name": "에이다",
-    "english_name": "Ada"
   },
   {
     "market": "KRW-SBD",

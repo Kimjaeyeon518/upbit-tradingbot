@@ -11,7 +11,7 @@ const access_key = "UvuQEnSEGCWsSpJI56GrGxxFMFSs1DBmrFMxzVke";
 const secret_key = "BqCV3bR4xcYcjtjKRkSLjjazRm16WS13VM51DgaW";
 const server_url = "https://api.upbit.com";
 
-const LIMIT_BUY_CHANGE_RATE = 0.01;
+const LIMIT_BUY_CHANGE_RATE = 0.012;
 const LIMIT_SELL_CHANGE_RATE = 1.02;
 // const LIMIT_SONJUL_RATE = -1.03; // 손절 변동률
 
@@ -155,7 +155,7 @@ async function buyOrder(MY_COIN_INFO) {
   const body = {
     market: MY_COIN_INFO.market_code, // 마켓 ID
     side: "bid", // 매수
-    volume: (result_money * 0.999) / MY_COIN_INFO.buy_price, // 매수량
+    volume: (result_money * 0.995) / MY_COIN_INFO.buy_price, // 매수량
     price: MY_COIN_INFO.buy_price, // 매수 가격
     ord_type: "limit", // 지정가 주문
   };
@@ -164,8 +164,7 @@ async function buyOrder(MY_COIN_INFO) {
   console.log("상세 매수 정보");
   console.log(body);
 
-  MY_COIN_INFO.total_volume = (result_money * 0.999) / MY_COIN_INFO.buy_price;
-  result_money = 0;
+  MY_COIN_INFO.total_volume = (result_money * 0.995) / MY_COIN_INFO.buy_price;
 
   // const query = queryEncode(body);
 
@@ -204,7 +203,7 @@ async function sellOrder(MY_COIN_INFO) {
   console.log("상세 매도 정보");
   console.log(body);
 
-  result_money += MY_COIN_INFO.sell_price * MY_COIN_INFO.total_volume * 0.999;
+  result_money = MY_COIN_INFO.sell_price * MY_COIN_INFO.total_volume * 0.995;
 
   // const query = queryEncode(body);
 
@@ -232,7 +231,6 @@ async function sellOrder(MY_COIN_INFO) {
 
 // 매도 여부 결정
 async function readyToSell(MY_COIN_INFO) {
-  console.log(MY_COIN_INFO.market_code + " 가격이 5연속 하락 시 매도합니다. ");
   // let fall_count = 0;
   // let even_count = 0;
   // let rise_count = 0;
@@ -243,46 +241,55 @@ async function readyToSell(MY_COIN_INFO) {
   var cycle = 0; // 현재가 가져오기 (myfetch(url,options)) 반복 횟수
   while_count++; // getTick() 함수 반복 횟수++
 
-  // 매수 즉시 2% 상승 가격에 매도 주문
-  if (MY_COIN_INFO.current_trade_price > MY_COIN_INFO.buy_price * LIMIT_SELL_CHANGE_RATE) {
-    console.log("코인 : " + MY_COIN_INFO.market_code + ", 매도 주문 : " + MY_COIN_INFO.buy_price * LIMIT_SELL_CHANGE_RATE);
+  while (!exceedSellLimit) {
+    cycle++;
 
-    MY_COIN_INFO.sell_price = MY_COIN_INFO.buy_price * LIMIT_SELL_CHANGE_RATE;
-    await sellOrder(MY_COIN_INFO);
+    const url = `https://api.upbit.com/v1/ticker?markets=${MY_COIN_INFO.market_code}`;
+    const options = {
+      method: "GET",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "User-Agent": "*",
+      },
+    };
+
+    // 현재가 초기화
+    MY_COIN_INFO.current_trade_price = 0;
+    before_change_rate = MY_COIN_INFO.change_rate;
+
+    await sleep(200);
+
+    // 현재가 가져오기
+    myfetch(url, options);
+
+    // 매수 즉시 2% 상승 가격에 매도 주문
+    if (MY_COIN_INFO.current_trade_price > MY_COIN_INFO.buy_price * LIMIT_SELL_CHANGE_RATE) {
+      await sleep(200);
+      console.log("코인 : " + MY_COIN_INFO.market_code + ", 매도 주문 : " + MY_COIN_INFO.buy_price * LIMIT_SELL_CHANGE_RATE);
+      MY_COIN_INFO.sell_price = MY_COIN_INFO.buy_price * LIMIT_SELL_CHANGE_RATE;
+      await sellOrder(MY_COIN_INFO);
+      exceedSellLimit = true;
+      break;
+    }
+
+    // 매수한 지 5분이 지나면 당시 거래가로 매도
+    if (cycle == 1500) {
+      await sleep(200);
+      console.log(
+        "15분 경과 !!! " +
+          MY_COIN_INFO.market_code +
+          " 를 " +
+          MY_COIN_INFO.buy_price +
+          " 원에 매수, " +
+          MY_COIN_INFO.current_trade_price +
+          " 원에 매도"
+      );
+      MY_COIN_INFO.sell_price = MY_COIN_INFO.current_trade_price;
+      await sellOrder(MY_COIN_INFO);
+      exceedSellLimit = true;
+      break;
+    }
   }
-
-  // while (!exceedSellLimit) {
-  //   cycle++;
-
-  //   const url = `https://api.upbit.com/v1/ticker?markets=${MY_COIN_INFO.market_code}`;
-  //   const options = {
-  //     method: "GET",
-  //     headers: {
-  //       Accept: "application/json, text/plain, */*",
-  //       "User-Agent": "*",
-  //     },
-  //   };
-
-  //   // 현재가 초기화
-  //   MY_COIN_INFO.current_trade_price = 0;
-  //   before_change_rate = MY_COIN_INFO.change_rate;
-
-  //   await sleep(200);
-
-  //   // 현재가 가져오기
-  //   myfetch(url, options);
-
-  //   await sleep(200);
-
-  //   // 매수한 지 15분이 지나면 당시 거래가로 매도
-  //   if (cycle == 4500) {
-  //     console.log("15분 경과 !!! " + MY_COIN_INFO.market_code + " 를 " + MY_COIN_INFO.buy_price + " 원에 매수, "  + MY_COIN_INFO.current_trade_price + " 원에 매도");
-  //     MY_COIN_INFO.sell_price = MY_COIN_INFO.current_trade_price;
-  //     await sellOrder(MY_COIN_INFO);
-  //     exceedSellLimit = true;
-  //     break;
-  //   }
-
   // console.log("변동률 : " + (MY_COIN_INFO.change_rate - before_change_rate) + ", 가격 : " + MY_COIN_INFO.current_trade_price + " 원");
 
   // // 가격 보합 시 even_count++;

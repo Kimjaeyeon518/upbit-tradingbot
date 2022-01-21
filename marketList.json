@@ -230,11 +230,6 @@
     "english_name": "QuarkChain"
   },
   {
-    "market": "KRW-BTT",
-    "korean_name": "비트토렌트",
-    "english_name": "BitTorrent"
-  },
-  {
     "market": "KRW-MOC",
     "korean_name": "모스코인",
     "english_name": "Moss Coin"
@@ -271,8 +266,8 @@
   },
   {
     "market": "KRW-TT",
-    "korean_name": "썬더토큰",
-    "english_name": "Thunder Token"
+    "korean_name": "썬더코어",
+    "english_name": "ThunderCore"
   },
   {
     "market": "KRW-CRE",
@@ -291,7 +286,7 @@
   },
   {
     "market": "KRW-HBAR",
-    "korean_name": "헤데라해시그래프",
+    "korean_name": "헤데라",
     "english_name": "Hedera Hashgraph"
   },
   {
@@ -420,11 +415,6 @@
     "english_name": "Alpha Quark Token"
   },
   {
-    "market": "KRW-BCHA",
-    "korean_name": "비트코인캐시에이비씨",
-    "english_name": "Bitcoin Cash ABC"
-  },
-  {
     "market": "KRW-GLM",
     "korean_name": "골렘",
     "english_name": "Golem"
@@ -493,5 +483,45 @@
     "market": "KRW-STX",
     "korean_name": "스택스",
     "english_name": "Stacks"
+  },
+  {
+    "market": "KRW-SOL",
+    "korean_name": "솔라나",
+    "english_name": "Solana"
+  },
+  {
+    "market": "KRW-ALGO",
+    "korean_name": "알고랜드",
+    "english_name": "Algorand"
+  },
+  {
+    "market": "KRW-1INCH",
+    "korean_name": "1인치네트워크",
+    "english_name": "1inch Network"
+  },
+  {
+    "market": "KRW-MATIC",
+    "korean_name": "폴리곤",
+    "english_name": "Polygon"
+  },
+  {
+    "market": "KRW-NU",
+    "korean_name": "누사이퍼",
+    "english_name": "Nucypher"
+  },
+  {
+    "market": "KRW-XEC",
+    "korean_name": "이캐시",
+    "english_name": "eCash"
+  },
+  {
+    "market": "KRW-AAVE",
+    "korean_name": "에이브",
+    "english_name": "Aave"
+  },
+  {
+    "market": "KRW-WEMIX",
+    "korean_name": "위믹스",
+    "english_name": "Wemix"
   }
 ]
